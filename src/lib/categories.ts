@@ -14,6 +14,22 @@ export const CATEGORIES = [
 
 export type Category = (typeof CATEGORIES)[number];
 
+/** One-line description per category, used as the `criteria` map for Clocked
+ *  Decide `choice` questions (the SDK's ChoiceQuestion requires `criteria`,
+ *  not `options`). */
+export const CATEGORY_DESCRIPTIONS: Record<Category, string> = {
+  Groceries: "Everyday food and household grocery items bought for home or shop use",
+  "Food & Dining": "Meals, drinks, and food eaten out at a restaurant, cafe, or food stall",
+  "Transport & Fuel": "Travel, vehicle fuel, rides, parking, and tolls",
+  Utilities: "Electricity, water, gas, internet, and phone bills",
+  "Office & Supplies": "Stationery, office equipment, and workplace supplies",
+  "Inventory / Stock": "Goods bought in bulk or wholesale to resell in the shop",
+  Rent: "Rent or lease payments for a shop, office, or property",
+  Health: "Medicine, pharmacy, clinic, and medical expenses",
+  Entertainment: "Movies, games, concerts, tickets, and subscriptions for fun",
+  Other: "Anything that does not fit the other categories",
+};
+
 /** Deterministic keyword fallback for categorisation (used only when Clocked
  *  returns no category for a line, and for the clearly-labelled demo parser).
  *  The live path prefers the Clocked Decide answer with its probability. */

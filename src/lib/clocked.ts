@@ -19,7 +19,7 @@
  * No key is ever logged or sent to the browser.
  */
 import { Clocked, ClockedError } from "clocked-sdk";
-import { CATEGORIES } from "./categories";
+import { CATEGORY_DESCRIPTIONS } from "./categories";
 import {
   BUSINESS_PURPOSES,
   parseFillResponse,
@@ -204,18 +204,18 @@ export interface CategoryDecision {
 export async function decideCategories(input: { receiptText: string; descriptions: string[] }): Promise<CategoryDecision[]> {
   if (input.descriptions.length === 0) return [];
   const clocked = clockedClient();
-  const questions: Record<string, { type: "choice"; instructions: string; options: string[] }> = {};
+  const questions: Record<string, { type: "choice"; instructions: string; criteria: Record<string, string> }> = {};
   input.descriptions.slice(0, 16).forEach((desc, i) => {
     questions[`line_${i}`] = {
       type: "choice",
       instructions: `Which expense category does this receipt line belong to? The line is: "${desc}". Choose the single best category.`,
-      options: [...CATEGORIES],
+      criteria: { ...CATEGORY_DESCRIPTIONS },
     };
   });
   const { data } = await clocked.decide({
     state: input.receiptText,
     questions,
-  } as never);
+  });
   const answers = (data as { answers?: Record<string, { choice?: string; confidence?: number; probabilities?: Record<string, number> }> }).answers ?? {};
   return Object.entries(answers).map(([key, a]) => ({
     lineIndex: parseInt(key.replace("line_", ""), 10),
